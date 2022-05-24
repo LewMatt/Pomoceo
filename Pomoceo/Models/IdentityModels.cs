@@ -25,7 +25,6 @@ namespace Pomoceo.Models
         {
         }
 
-        public DbSet<Offer> Offers { get; set; }
 
         public static ApplicationDbContext Create()
         {
