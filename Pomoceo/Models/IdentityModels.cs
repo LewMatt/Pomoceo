@@ -25,11 +25,12 @@ namespace Pomoceo.Models
         {
         }
 
-        public DbSet<Offer> Offers { get; set; }
 
         public static ApplicationDbContext Create()
         {
             return new ApplicationDbContext();
         }
+
+        public System.Data.Entity.DbSet<Pomoceo.Models.Offer> Offers { get; set; }
     }
 }
