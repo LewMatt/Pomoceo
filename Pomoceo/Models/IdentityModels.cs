@@ -29,5 +29,7 @@ namespace Pomoceo.Models
         {
             return new ApplicationDbContext();
         }
+
+        public System.Data.Entity.DbSet<Pomoceo.Models.Offer> Offers { get; set; }
     }
 }
