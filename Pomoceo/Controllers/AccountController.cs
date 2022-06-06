@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Pomoceo.Models;
@@ -15,8 +18,10 @@ namespace Pomoceo.Controllers
     [Authorize]
     public class AccountController : Controller
     {
+        private ApplicationDbContext db = new ApplicationDbContext();
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        
 
         public AccountController()
         {
@@ -152,17 +157,15 @@ namespace Pomoceo.Controllers
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                user.FirstName = model.FirstName;
+                user.LastName = model.LastName;
+                user.Nationality = model.Nationality;
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
                     
-                    // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
-                    // Send an email with this link
-                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
-
+              
                     return RedirectToAction("Index", "Home");
                 }
                 AddErrors(result);
@@ -401,6 +404,93 @@ namespace Pomoceo.Controllers
         public ActionResult ExternalLoginFailure()
         {
             return View();
+        }
+
+
+        public ActionResult Details(string id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            IdentityUser usr = (IdentityUser)db.Users.Where(x => x.Id == id).FirstOrDefault();
+            if (usr == null)
+            {
+                return HttpNotFound();
+            }
+            return View(usr);
+        }
+
+        // GET: Categories/Create
+        public ActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: Categories/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create([Bind(Include = "FirstName,LastName,Nationality,Email,PasswordHash,PhoneNumber,UserName")] ApplicationUser usr)
+        {
+            if (ModelState.IsValid)
+            {
+                
+                var user = new ApplicationUser { UserName = usr.UserName, Email = usr.Email };
+                user.FirstName = usr.FirstName;
+                user.LastName = usr.LastName;
+                user.Nationality = usr.Nationality;
+                user.Email = usr.Email;
+                user.PhoneNumber = usr.PhoneNumber;
+                user.UserName = usr.UserName;
+                var result =  UserManager.Create(user, usr.PasswordHash);
+                var us = UserManager.FindByEmail(usr.Email);
+                UserManager.AddToRole(us.Id, "Admin");
+                db.SaveChanges();
+                return RedirectToAction("Index" , "Manage");
+            }
+
+            return View(usr);
+        }
+
+        // GET: Categories/Edit/5
+        public ActionResult Edit(string id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            IdentityUser usr = db.Users.Find(id);
+            if (usr == null)
+            {
+                return HttpNotFound();
+            }
+            return View(usr);
+        }
+
+        // POST: Categories/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit([Bind(Include = "Id,FirstName,LastName,Nationality,Email,EmailConfirmed,PhoneNumber,PhoneNumberConfirmed,UserName")] ApplicationUser usr)
+        {
+            var userManager = new UserManager<IdentityUser>(new UserStore<IdentityUser>());
+            if (ModelState.IsValid)
+            {
+                var user = db.Users.Where(x => x.Id == usr.Id).FirstOrDefault();
+                user.FirstName = usr.FirstName;
+                user.LastName = usr.LastName;
+                user.Nationality = usr.Nationality;
+                user.Email = usr.Email;
+                user.EmailConfirmed = usr.EmailConfirmed;
+                user.PhoneNumber = usr.PhoneNumber;
+                user.PhoneNumberConfirmed = usr.PhoneNumberConfirmed;
+                user.UserName = usr.UserName;
+                //userManager.Entry(usr).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index", "Manage", routeValues: null);
+            }
+            return View(usr);
         }
 
         protected override void Dispose(bool disposing)

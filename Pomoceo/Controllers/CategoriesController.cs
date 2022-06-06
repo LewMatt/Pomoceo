@@ -10,108 +10,107 @@ using Pomoceo.Models;
 
 namespace Pomoceo.Controllers
 {
-    public class OffersController : Controller
+    public class CategoriesController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: Offers
+        // GET: Categories
         public ActionResult Index()
         {
-            return View(db.Offers.ToList());
+            return View(db.Categories.ToList());
         }
 
-        // GET: Offers/Details/5
+        // GET: Categories/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Offer offer = db.Offers.Find(id);
-            if (offer == null)
+            Category category = db.Categories.Find(id);
+            if (category == null)
             {
                 return HttpNotFound();
             }
-            return View(offer);
+            return View(category);
         }
 
-        // GET: Offers/Create
-        [Authorize]
+        // GET: Categories/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Offers/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // POST: Categories/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "CategoryID,Description,Type,Title")] Offer offer)
+        public ActionResult Create([Bind(Include = "CategoryID,CategoryName")] Category category)
         {
             if (ModelState.IsValid)
             {
-                db.Offers.Add(offer);
+                db.Categories.Add(category);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            return View(offer);
+            return View(category);
         }
 
-        // GET: Offers/Edit/5
+        // GET: Categories/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Offer offer = db.Offers.Find(id);
-            if (offer == null)
+            Category category = db.Categories.Find(id);
+            if (category == null)
             {
                 return HttpNotFound();
             }
-            return View(offer);
+            return View(category);
         }
 
-        // POST: Offers/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // POST: Categories/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "CategoryID,Description,Type,Title")] Offer offer)
+        public ActionResult Edit([Bind(Include = "CategoryID,CategoryName")] Category category)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(offer).State = EntityState.Modified;
+                db.Entry(category).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(offer);
+            return View(category);
         }
 
-        // GET: Offers/Delete/5
+        // GET: Categories/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Offer offer = db.Offers.Find(id);
-            if (offer == null)
+            Category category = db.Categories.Find(id);
+            if (category == null)
             {
                 return HttpNotFound();
             }
-            return View(offer);
+            return View(category);
         }
 
-        // POST: Offers/Delete/5
+        // POST: Categories/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Offer offer = db.Offers.Find(id);
-            db.Offers.Remove(offer);
+            Category category = db.Categories.Find(id);
+            db.Categories.Remove(category);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
   <Import Project="..\packages\Microsoft.VisualStudio.Azure.Containers.Tools.Targets.1.10.13\build\Microsoft.VisualStudio.Azure.Containers.Tools.Targets.props" Condition="Exists('..\packages\Microsoft.VisualStudio.Azure.Containers.Tools.Targets.1.10.13\build\Microsoft.VisualStudio.Azure.Containers.Tools.Targets.props')" />
   <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -49,10 +50,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
@@ -171,6 +172,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\CategoriesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\OffersController.cs" />
@@ -181,12 +183,29 @@
     <Compile Include="Migrations\202205241345282_init.Designer.cs">
       <DependentUpon>202205241345282_init.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202206031036363_identity_edit.cs" />
+    <Compile Include="Migrations\202206031036363_identity_edit.designer.cs">
+      <DependentUpon>202206031036363_identity_edit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202206031100102_identityFirstName.cs" />
+    <Compile Include="Migrations\202206031100102_identityFirstName.designer.cs">
+      <DependentUpon>202206031100102_identityFirstName.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202206031156247_mig2.cs" />
+    <Compile Include="Migrations\202206031156247_mig2.designer.cs">
+      <DependentUpon>202206031156247_mig2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202206061357105_offertest.cs" />
+    <Compile Include="Migrations\202206061357105_offertest.designer.cs">
+      <DependentUpon>202206061357105_offertest.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Offer.cs" />
+    <Compile Include="Models\UserRoleInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -255,6 +274,14 @@
     <Content Include="Views\Offers\Details.cshtml" />
     <Content Include="Views\Offers\Edit.cshtml" />
     <Content Include="Views\Offers\Index.cshtml" />
+    <Content Include="Views\Categories\Create.cshtml" />
+    <Content Include="Views\Categories\Delete.cshtml" />
+    <Content Include="Views\Categories\Details.cshtml" />
+    <Content Include="Views\Categories\Edit.cshtml" />
+    <Content Include="Views\Categories\Index.cshtml" />
+    <Content Include="Views\Account\Details.cshtml" />
+    <Content Include="Views\Account\Edit.cshtml" />
+    <Content Include="Views\Account\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -275,6 +302,18 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202205241345282_init.resx">
       <DependentUpon>202205241345282_init.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202206031036363_identity_edit.resx">
+      <DependentUpon>202206031036363_identity_edit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202206031100102_identityFirstName.resx">
+      <DependentUpon>202206031100102_identityFirstName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202206031156247_mig2.resx">
+      <DependentUpon>202206031156247_mig2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202206061357105_offertest.resx">
+      <DependentUpon>202206061357105_offertest.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
@@ -312,8 +351,11 @@
     <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
     <Error Condition="!Exists('..\packages\Microsoft.VisualStudio.Azure.Containers.Tools.Targets.1.10.13\build\Microsoft.VisualStudio.Azure.Containers.Tools.Targets.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.VisualStudio.Azure.Containers.Tools.Targets.1.10.13\build\Microsoft.VisualStudio.Azure.Containers.Tools.Targets.props'))" />
     <Error Condition="!Exists('..\packages\Microsoft.VisualStudio.Azure.Containers.Tools.Targets.1.10.13\build\Microsoft.VisualStudio.Azure.Containers.Tools.Targets.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.VisualStudio.Azure.Containers.Tools.Targets.1.10.13\build\Microsoft.VisualStudio.Azure.Containers.Tools.Targets.targets'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
   </Target>
   <Import Project="..\packages\Microsoft.VisualStudio.Azure.Containers.Tools.Targets.1.10.13\build\Microsoft.VisualStudio.Azure.Containers.Tools.Targets.targets" Condition="Exists('..\packages\Microsoft.VisualStudio.Azure.Containers.Tools.Targets.1.10.13\build\Microsoft.VisualStudio.Azure.Containers.Tools.Targets.targets')" />
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
