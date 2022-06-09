@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Pomoceo.Models;
+using Microsoft.AspNet.Identity;
 
 namespace Pomoceo.Controllers
 {
@@ -15,9 +16,35 @@ namespace Pomoceo.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Offers
-        public ActionResult Index()
+        public ActionResult Index(int CategoryID=-1,string searchString="", string sortOrder = "" )
         {
-            return View(db.Offers.ToList());
+            var offers = db.Offers.ToList();
+           
+            switch (sortOrder)
+            {
+                case "oferowanie":
+                    offers = offers.Where(p => p.Type =="oferowanie").ToList();
+                    break;
+                case "potrzeba":
+                    offers = offers.Where(p => p.Type == "potrzeba").ToList();
+                    break;
+                default:
+                    offers = offers.OrderBy(p => p.OfferID).ToList();
+                    break;
+            }
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                offers = offers.Where(p => p.City.Contains(searchString)).ToList();
+            }
+            if (CategoryID != -1)
+            { 
+                offers = offers.Where(p => p.CategoryID == CategoryID).ToList();    
+            }
+
+            PopulateCategoriesDropDownList();
+
+            return View(offers);
         }
 
         // GET: Offers/Details/5
@@ -39,23 +66,26 @@ namespace Pomoceo.Controllers
         [Authorize]
         public ActionResult Create()
         {
+            PopulateCategoriesDropDownList();
             return View();
         }
 
-        // POST: Offers/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "CategoryID,Description,Type,Title")] Offer offer)
+        public ActionResult Create([Bind(Include = "CategoryID,Description,Type,Title,City")] Offer offer)
         {
+
+            
             if (ModelState.IsValid)
             {
+
+                offer.UserID = User.Identity.GetUserId();
                 db.Offers.Add(offer);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-
+            PopulateCategoriesDropDownList(offer.CategoryID);
             return View(offer);
         }
 
@@ -71,6 +101,7 @@ namespace Pomoceo.Controllers
             {
                 return HttpNotFound();
             }
+            PopulateCategoriesDropDownList();
             return View(offer);
         }
 
@@ -79,14 +110,18 @@ namespace Pomoceo.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "CategoryID,Description,Type,Title")] Offer offer)
+        public ActionResult Edit([Bind(Include = "CategoryID,OfferID,Description,Type,Title,City")] Offer offer)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(offer).State = EntityState.Modified;
+
+                //db.Entry(offer).State = EntityState.Modified;
+                var of = db.Offers.Where(p => p.OfferID == offer.OfferID).FirstOrDefault();
+                of = offer;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+            PopulateCategoriesDropDownList(offer.CategoryID);
             return View(offer);
         }
 
@@ -123,6 +158,12 @@ namespace Pomoceo.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        private void PopulateCategoriesDropDownList(object selectCategorie = null)
+        {
+            var catQuery = db.Categories.ToList();
+            ViewBag.CategoryID = new SelectList(catQuery, "CategoryID", null, selectCategorie);
         }
     }
 }

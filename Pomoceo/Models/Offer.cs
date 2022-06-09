@@ -11,7 +11,7 @@ namespace Pomoceo.Models
         [Key]
         public int OfferID { get; set; }
         public int CategoryID { get; set; }
-        public int UserID { get; set; }
+        public string UserID { get; set; }
         public string Description { get; set; }
         public string Type { get; set; }
         public string Title { get; set; }

@@ -179,25 +179,13 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202205241345282_init.cs" />
-    <Compile Include="Migrations\202205241345282_init.Designer.cs">
-      <DependentUpon>202205241345282_init.cs</DependentUpon>
+    <Compile Include="Migrations\202206091603166_init.cs" />
+    <Compile Include="Migrations\202206091603166_init.designer.cs">
+      <DependentUpon>202206091603166_init.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202206031036363_identity_edit.cs" />
-    <Compile Include="Migrations\202206031036363_identity_edit.designer.cs">
-      <DependentUpon>202206031036363_identity_edit.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202206031100102_identityFirstName.cs" />
-    <Compile Include="Migrations\202206031100102_identityFirstName.designer.cs">
-      <DependentUpon>202206031100102_identityFirstName.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202206031156247_mig2.cs" />
-    <Compile Include="Migrations\202206031156247_mig2.designer.cs">
-      <DependentUpon>202206031156247_mig2.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202206061357105_offertest.cs" />
-    <Compile Include="Migrations\202206061357105_offertest.designer.cs">
-      <DependentUpon>202206061357105_offertest.cs</DependentUpon>
+    <Compile Include="Migrations\202206091654268_offerUserIdTypeEdit.cs" />
+    <Compile Include="Migrations\202206091654268_offerUserIdTypeEdit.designer.cs">
+      <DependentUpon>202206091654268_offerUserIdTypeEdit.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -300,20 +288,11 @@
     <Content Include="Scripts\jquery-3.4.1.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202205241345282_init.resx">
-      <DependentUpon>202205241345282_init.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202206091603166_init.resx">
+      <DependentUpon>202206091603166_init.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202206031036363_identity_edit.resx">
-      <DependentUpon>202206031036363_identity_edit.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202206031100102_identityFirstName.resx">
-      <DependentUpon>202206031100102_identityFirstName.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202206031156247_mig2.resx">
-      <DependentUpon>202206031156247_mig2.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202206061357105_offertest.resx">
-      <DependentUpon>202206061357105_offertest.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202206091654268_offerUserIdTypeEdit.resx">
+      <DependentUpon>202206091654268_offerUserIdTypeEdit.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

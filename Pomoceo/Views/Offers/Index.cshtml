@@ -6,41 +6,80 @@
 }
 
 <h2>Index</h2>
+<dt>Wybierz typ</dt>
+<dd>
+    @Html.ActionLink("Wszystko", "Index", new { sortOrder = "Wszystko" })
+    @Html.ActionLink("Potrzeba", "Index", new { sortOrder = "potrzeba" })
+    @Html.ActionLink("Oferowanie", "Index", new { sortOrder = "oferowanie" })
+</dd>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
+<form asp-controller="Offers" asp-action="Index">
+    <p>
+        Miasto: <input type="text" name="searchString" />
+        <input type="submit" value="Wybierz" />
+    </p>
+</form>
+<form asp-controller="Offers" asp-action="Index">
+    <div class="col-md-10">
+        @Html.DropDownList("CategoryID", "Nazwa kategorii")
+        <input type="submit" value="Wybierz" />
+    </div>
+</form>
+
 <table class="table">
     <tr>
+        @if (User.IsInRole("Admin"))
+        {
+            <th>
+                @Html.DisplayNameFor(model => model.UserID)
+
+            </th>
+        }
         <th>
             @Html.DisplayNameFor(model => model.Description)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Type)
+
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Title)
         </th>
+        <th>
+            @Html.DisplayNameFor(model => model.City)
+        </th>
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Description)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Type)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Title)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.CategoryID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.CategoryID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.CategoryID })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            @if (User.IsInRole("Admin"))
+            {
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserID)
+                </td>
+            }
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Type)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.City)
+            </td>
+            <td>
+                @Html.ActionLink("Details", "Details", new { id = item.OfferID }) |
+                @if (User.IsInRole("Admin"))
+                {
+                    @Html.ActionLink("Edit | ", "Edit", new { id = item.OfferID })
+                    @Html.ActionLink("Delete", "Delete", new { id = item.OfferID })
+                }
+            </td>
+        </tr>
+    }
 
 </table>
